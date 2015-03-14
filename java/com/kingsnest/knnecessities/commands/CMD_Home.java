@@ -12,9 +12,10 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.World;
 
 public class CMD_Home implements ICommand {
-	private KNNecessities_Main myPlugin = null;
+	private KNNecessities_Main myMod = null;
 	private String commandName = "home";
 	private String commandUse = "/home | Will take you to the home you set with /sethome, or spawn if you have none.";
 	
@@ -22,7 +23,7 @@ public class CMD_Home implements ICommand {
 	private List aliases;
 	
 	public CMD_Home(KNNecessities_Main instance) {
-		this.myPlugin = instance;
+		this.myMod = instance;
 		this.aliases = new ArrayList();
 		aliases.add("home");
 		aliases.add("h");
@@ -54,11 +55,12 @@ public class CMD_Home implements ICommand {
 		 EntityPlayer player;
 		 ChatComponentText cmc = new ChatComponentText("");
          
-         if(icommandsender instanceof EntityPlayer){
+         if(icommandsender instanceof EntityPlayer){ // Woo its a player
                  player = (EntityPlayer)icommandsender;
+                 
                  // Check for home
-                 Home home = null;
-                 home = checkForHome(player.getUniqueID());
+                 Home home = myMod.getHomeByOwner(player.getUniqueID());
+                 
                  if(home == null)
                  {
                 	 // No home for them!
@@ -68,21 +70,18 @@ public class CMD_Home implements ICommand {
                      return;
                  } else {
                 	 // We found a home for them!
-                     cmc.appendText("The magical space beavers found your home, and whisk you away to it.");
+                     // Try to send them to it.
+                     if(myMod.sendPlayerToLocation(player, home.getLocation()))
+                     {
+                    	 cmc.appendText("The magical space beavers found your home, and whisk you away to it.");
+                     } else {
+                    	 cmc.appendText("Due to great upheavel in the cosmic energy fields the magical space beavers were not able to take you to your home. You may want to tell someone about this.");
+                     }
                      player.addChatMessage(cmc);
                      
-                     // Set their World
-                     //player.setWorld(p_70029_1_);
-                     
-                     // Set their Dimension
-                     player.dimension = home.getLocation().getDimension();
-                     
-                     // Set their Position
-                     player.setPositionAndRotation(home.getLocation().getX(), home.getLocation().getY(), home.getLocation().getZ(), home.getLocation().getPitch(), home.getLocation().getYaw());
-                     return;
                  }
          }
-         else {
+         else { // Silly consoles.
                 cmc.appendText("No. Fuck you.");
         	 	icommandsender.addChatMessage(cmc);
                 return;
@@ -105,10 +104,5 @@ public class CMD_Home implements ICommand {
 	public boolean isUsernameIndex(String[] astring, int i) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	
-	private Home checkForHome(UUID playerUUID)
-	{
-		return null;
 	}
 }

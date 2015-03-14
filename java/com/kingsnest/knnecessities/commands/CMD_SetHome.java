@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kingsnest.knnecessities.KNNecessities_Main;
+import com.kingsnest.knnecessities.datatypes.Home;
 import com.kingsnest.knnecessities.datatypes.Location;
 
 import net.minecraft.command.ICommand;
@@ -52,16 +53,29 @@ public class CMD_SetHome implements ICommand{
 		 EntityPlayer player;
 		 ChatComponentText cmc = new ChatComponentText("");
          
-         if(icommandsender instanceof EntityPlayer){
+         if(icommandsender instanceof EntityPlayer){ // We have a player!
                  player = (EntityPlayer)icommandsender;
-                 cmc.appendText("If we actually could set your home, we would.");
-                 cmc.appendText("The magical space beavers are anxious to fulfill your command but can not.");
-                 player.addChatMessage(cmc);
-                 
+                 // Get their current Location.
                  Location loc = new Location(player.worldObj.getWorldInfo().getWorldName(), player.dimension, player.posX, player.posY, player.posZ, player.cameraPitch, player.cameraYaw);
+                 
+                 // Check for a home...
+                 Home home = myMod.getHomeByOwner(player.getUniqueID());
+                 
+                 if(!(home == null))
+                 {	
+                	 // House found, remove it first
+                	 myMod.getHomes().remove(home);
+                	 cmc.appendText("The magical space beavers have erased your old home from their logs.\n");
+                 } 
+                 
+                 // Go ahead and add one for them.
+            	 myMod.getHomes().add(new Home(loc, player.getUniqueID()));
+       
+                 cmc.appendText("The magical space beavers have noted the location of your new home.");
+                 player.addChatMessage(cmc);
+                                  
                  return;
-         }
-         else {
+         } else { // Silly console
                 cmc.appendText("No. Fuck you.");
         	 	icommandsender.addChatMessage(cmc);
                 return;
