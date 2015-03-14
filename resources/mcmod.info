@@ -1,0 +1,16 @@
+[
+{
+  "modid": "knnecessities",
+  "name": "King's Nest Necessary Commands",
+  "description": "Adds basic teleport functionality such as spawn, home, and their set equivalents.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://www.kingsnest.com",
+  "updateUrl": "",
+  "authorList": ["Raniy"],
+  "credits": "The Forge and FML guys, for making this API.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
