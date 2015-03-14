@@ -10,6 +10,8 @@ import com.kingsnest.knnecessities.datatypes.Location;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.config.Configuration;
 
@@ -54,32 +56,37 @@ public class CMD_SetHome implements ICommand{
 		 EntityPlayer player;
 		 ChatComponentText cmc = new ChatComponentText("");
          
-         if(icommandsender instanceof EntityPlayer){ // We have a player!
-                 player = (EntityPlayer)icommandsender;
-                 // Get their current Location.
-                 Location loc = new Location(player.worldObj.getWorldInfo().getWorldName(), player.dimension, player.posX, player.posY, player.posZ, player.cameraPitch, player.cameraYaw);
-                 
-                 // Check for a home...
-                 Home home = myMod.getHomeByOwner(player.getUniqueID());
-                 
-                 if(!(home == null))
-                 {	
-                	 // House found, remove it first
-                	 myMod.getHomes().remove(home);
-                	 cmc.appendText("The magical space beavers have erased your old home from their logs. ");
-                 } 
-                 
-                 // Go ahead and add one for them.
-            	 myMod.getHomes().add(new Home(loc, player.getUniqueID()));
-            	 
-            	 cmc.appendText("The magical space beavers have noted the location of your new home.");
-                 player.addChatMessage(cmc);
-                                  
-                 return;
+         if(icommandsender instanceof EntityPlayer)
+         { 
+        	 // We have a player!
+        	 player = (EntityPlayer)icommandsender;
+             
+        	 // Check for home
+             NBTTagCompound nbt = player.getEntityData();
+             NBTBase worldTag = nbt.getTag(myMod.WORLDKEY);
+             
+             if (worldTag != null)
+             {
+            	 // House found, inform them of its deletion...
+            	 cmc.appendText("The magical space beavers have erased your old home from their logs. ");
+             }
+             
+             // Go ahead and set their house up.
+             nbt.setString(myMod.WORLDKEY, player.worldObj.getWorldInfo().getWorldName()); //World
+             nbt.setInteger(myMod.DIMENSIONKEY, player.dimension); //Dimension
+             nbt.setDouble(myMod.XKEY, player.posX); //X
+             nbt.setDouble(myMod.YKEY, player.posY); //Y
+             nbt.setDouble(myMod.ZKEY, player.posZ); //Z
+             nbt.setFloat(myMod.PITCHKEY, player.cameraPitch); //Pitch
+             nbt.setFloat(myMod.YAWKEY, player.cameraYaw); //Yaw
+     			
+             cmc.appendText("The magical space beavers have noted the location of your new home.");
+             player.addChatMessage(cmc);             
+             return;
          } else { // Silly console
-                cmc.appendText("No. Fuck you.");
-        	 	icommandsender.addChatMessage(cmc);
-                return;
+             cmc.appendText("No. Fuck you.");
+        	 icommandsender.addChatMessage(cmc);
+             return;
          }
 	}
 
