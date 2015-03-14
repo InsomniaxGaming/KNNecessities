@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 
+
+
+
 // KN imports
 import com.kingsnest.knnecessities.datatypes.Home;
 import com.kingsnest.knnecessities.datatypes.Location;
@@ -13,9 +16,13 @@ import com.kingsnest.knnecessities.commands.CMD_Home;
 import com.kingsnest.knnecessities.commands.CMD_SetHome;
 
 
+
+
+
 // Minecraft / Forge imports
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -24,6 +31,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import cpw.mods.fml.server.FMLServerHandler;
 
 @Mod(modid = KNNecessities_Main.MODID, version = KNNecessities_Main.VERSION, name = KNNecessities_Main.NAME )
 public class KNNecessities_Main {
@@ -46,10 +55,15 @@ public class KNNecessities_Main {
     // Space point
     private Location spawn;
     
+    // Config object
+    public Configuration config = null;
     
     @EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		
+        config = new Configuration(event.getSuggestedConfigurationFile());
+
+        // loading the configuration from its file
+        config.load();
 	}
 
     @EventHandler
@@ -75,23 +89,51 @@ public class KNNecessities_Main {
     	return;
     }
     
+    @EventHandler
+    public void serverStopping(FMLServerStoppingEvent event)
+    {
+    	for(Home home:getHomes())
+    	{
+    		config.get(Configuration.CATEGORY_GENERAL, home.getOwnerUUID().toString() +".home.world", home.getLocation().getWorld());
+    		config.get(Configuration.CATEGORY_GENERAL, home.getOwnerUUID().toString() +".home.dimension", home.getLocation().getDimension());
+    		config.get(Configuration.CATEGORY_GENERAL, home.getOwnerUUID().toString() +".home.X", home.getLocation().getX());
+    		config.get(Configuration.CATEGORY_GENERAL, home.getOwnerUUID().toString() +".home.Y", home.getLocation().getY());
+    		config.get(Configuration.CATEGORY_GENERAL, home.getOwnerUUID().toString() +".home.Z", home.getLocation().getZ());
+    		config.get(Configuration.CATEGORY_GENERAL, home.getOwnerUUID().toString() +".home.Pitch", home.getLocation().getPitch());
+    		config.get(Configuration.CATEGORY_GENERAL, home.getOwnerUUID().toString() +".home.Yaw", home.getLocation().getYaw());
+    	}
+    	
+    	config.save();
+    	return;
+    }
+    
+    
     public boolean sendPlayerToLocation(EntityPlayer player, Location location)
     {
-    	 // Set their World
-    	World world = getWorldByName(location.getWorld());
+    	
+    	// Set their World
+       	World world = getWorldByName(location.getWorld());
     	if(world == null) // This bit is Kludgy... would like to rework.
     	{
     		return false;
     	}
     	
-    	player.setWorld(world);
+    	if(!(player.worldObj.getWorldInfo().getWorldName() == world.getWorldInfo().getWorldName())) // Dont set world if they are already there.
+    	{
+    		player.setWorld(world);
+    	}
                              
         // Set their Dimension
-        player.dimension = location.getDimension();
+    	if(!(player.dimension == location.getDimension()))
+    	{
+    		player.travelToDimension(location.getDimension());
+    	}
         
         // Set their Position
         player.setPositionAndRotation(location.getX(), location.getY(), location.getZ(), location.getPitch(), location.getYaw());
         
+        // Make sure the position update packet got sent.
+        player.setPositionAndUpdate(location.getX(), location.getY(), location.getZ());
         return true;
     }
     

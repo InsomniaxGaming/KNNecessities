@@ -11,6 +11,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.common.config.Configuration;
 
 public class CMD_SetHome implements ICommand{
 	private KNNecessities_Main myMod = null;
@@ -65,13 +66,13 @@ public class CMD_SetHome implements ICommand{
                  {	
                 	 // House found, remove it first
                 	 myMod.getHomes().remove(home);
-                	 cmc.appendText("The magical space beavers have erased your old home from their logs.\n");
+                	 cmc.appendText("The magical space beavers have erased your old home from their logs. ");
                  } 
                  
                  // Go ahead and add one for them.
             	 myMod.getHomes().add(new Home(loc, player.getUniqueID()));
-       
-                 cmc.appendText("The magical space beavers have noted the location of your new home.");
+            	 
+            	 cmc.appendText("The magical space beavers have noted the location of your new home.");
                  player.addChatMessage(cmc);
                                   
                  return;
