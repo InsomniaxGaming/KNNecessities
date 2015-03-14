@@ -7,13 +7,22 @@ import java.util.UUID;
 
 
 
+
+
+
 // KN imports
 import com.kingsnest.knnecessities.datatypes.Home;
 import com.kingsnest.knnecessities.datatypes.Location;
+import com.kingsnest.knnecessities.commands.CMD_Fly;
 import com.kingsnest.knnecessities.commands.CMD_Home;
 import com.kingsnest.knnecessities.commands.CMD_SetHome;
 import com.kingsnest.knnecessities.commands.CMD_SetSpawn;
+import com.kingsnest.knnecessities.commands.CMD_SetSpeed;
 import com.kingsnest.knnecessities.commands.CMD_Spawn;
+
+
+
+import com.kingsnest.knnecessities.commands.CMD_ToggleGodMode;
 
 
 // Minecraft / Forge imports
@@ -107,6 +116,12 @@ public class KNNecessities_Main {
                                                             // handler
         event.registerServerCommand(new CMD_Spawn(this)); // Add Handler for /spawn
         event.registerServerCommand(new CMD_SetSpawn(this)); // Add handler for /setspawn
+
+        event.registerServerCommand(new CMD_SetSpeed(this)); // Add handler for /setspeed
+        
+        event.registerServerCommand(new CMD_Fly(this)); // Add handler for /fly
+        
+        event.registerServerCommand(new CMD_ToggleGodMode(this)); // Add handler for /tgm
         return;
     }
 
