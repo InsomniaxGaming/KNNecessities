@@ -2,29 +2,27 @@ package com.kingsnest.knnecessities.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import com.kingsnest.knnecessities.datatypes.Home;
+import com.kingsnest.knnecessities.datatypes.Location;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 
-public class CMD_Home implements ICommand {
+public class CMD_SetHome implements ICommand{
 	private String commandName = "home";
 	private String commandUse = "/home | Will take you to the home you set with /sethome, or spawn if you have none.";
 	
 	
 	private List aliases;
 	
-	public CMD_Home() {
+	public CMD_SetHome() {
 		this.aliases = new ArrayList();
-		aliases.add("home");
-		aliases.add("h");
+		aliases.add("sethome");
 	}
 	
+
 	@Override
 	public int compareTo(Object arg0) {
 		// TODO Auto-generated method stub
@@ -53,30 +51,11 @@ public class CMD_Home implements ICommand {
          
          if(icommandsender instanceof EntityPlayer){
                  player = (EntityPlayer)icommandsender;
-                 // Check for home
-                 Home home = null;
-                 home = checkForHome(player.getUniqueID());
-                 if(home == null)
-                 {
-                	 // No home for them!
-                     cmc.appendText("If we actually could take you home, we would.");
-                     cmc.appendText("The magical space beavers are anxious to fulfill your command but can not.");
-                     player.addChatMessage(cmc);
-                     return;
-                 } else {
-                	 // We found a home for them!
-                     cmc.appendText("The magical space beavers found your home, and whisk you away to it.");
-                     player.addChatMessage(cmc);
-                     
-                     // Set their World
-                     
-                     // Set their Dimension
-                     
-                     // Set their Position
-                     
-                 }
-
-                 String world = player.worldObj.getWorldInfo().getWorldName();
+                 cmc.appendText("If we actually could set your home, we would.");
+                 cmc.appendText("The magical space beavers are anxious to fulfill your command but can not.");
+                 player.addChatMessage(cmc);
+                 
+                 Location loc = new Location(player.worldObj.getWorldInfo().getWorldName(), player.dimension, player.posX, player.posY, player.posZ, player.cameraPitch, player.cameraYaw);
                  return;
          }
          else {
@@ -102,11 +81,5 @@ public class CMD_Home implements ICommand {
 	public boolean isUsernameIndex(String[] astring, int i) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	
-	private Home checkForHome(UUID playerUUID)
-	{
-		
-		return null;
 	}
 }

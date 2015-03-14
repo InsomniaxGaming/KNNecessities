@@ -1,6 +1,10 @@
 package com.kingsnest.knnecessities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.kingsnest.knnecessities.commands.CMD_Home;
+import com.kingsnest.knnecessities.datatypes.Home;
 
 import net.minecraft.init.Blocks;
 import cpw.mods.fml.common.Mod;
@@ -19,12 +23,16 @@ public class KNNecessities_Main {
 	public static final String MODID = "knnecessities";
 	public static final String VERSION = "0.0.1 Alpha";
     public static final String NAME = "King's Nest Necessary Commands";
+    
 
     @Instance(MODID)
     public KNNecessities_Main instance;
     
     @SidedProxy(clientSide="com.kingsnest.knnecessities.KNNClientProxy", serverSide="com.kingsnest.knnecessities.KNNCommonProxy")
     public static KNNClientProxy proxy;
+    
+    // List of Homes
+    private List<Home> homes;
     
     @EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
@@ -36,6 +44,9 @@ public class KNNecessities_Main {
     {
 		// Just to get our name in the log. :P
         System.out.println(NAME + " v" + VERSION + " loading.");
+        
+        homes = new ArrayList<Home>();
+        
     }
     
     @EventHandler
@@ -50,4 +61,14 @@ public class KNNecessities_Main {
     	return;
     }
     
+    public List<Home> getHomes()
+    {
+    	return this.homes;
+    }
+    
+    public void setHomes(List<Home> homes)
+    {
+    	this.homes = homes;
+	}
+
 }

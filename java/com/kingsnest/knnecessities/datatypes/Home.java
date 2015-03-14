@@ -3,6 +3,7 @@ package com.kingsnest.knnecessities.datatypes;
 public class Home{
 	private Location location;
 	private String ownerUUID;
+	private String homeName;
 	
 	public Home(Location loc, String ownerUUID)
 	{
