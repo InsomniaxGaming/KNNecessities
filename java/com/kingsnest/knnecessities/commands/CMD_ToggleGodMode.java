@@ -9,20 +9,22 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.WorldSettings.GameType;
 
-public class CMD_SetSpeed implements ICommand{
+public class CMD_ToggleGodMode implements ICommand{
 	
     private KNNecessities_Main myMod       = null;
-    private String             commandName = "setspeed";
-    private String             commandUse  = "/setspeed [speed] | Sets the speed of the command sender.";
+    private String             commandName = "togglegodmode";
+    private String             commandUse  = "/togglegodmode | Toggles the gamemode of the command sender.";
 
     private List               aliases;
 
-    public CMD_SetSpeed(KNNecessities_Main instance) {
+    public CMD_ToggleGodMode(KNNecessities_Main instance) {
         this.myMod = instance;
         
         this.aliases = new ArrayList();
-        aliases.add("setspeed");
+        aliases.add("togglegodmode");
+        aliases.add("tgm");
     }
 
 	@Override
@@ -54,31 +56,22 @@ public class CMD_SetSpeed implements ICommand{
 
         if (icommandsender instanceof EntityPlayer) { // We have a player!
             player = (EntityPlayer) icommandsender;
-
-            if(astring.length > 0)
+            
+            if(player.capabilities.isCreativeMode)
             {
-            	int speed;
-            	
-            	try {
-            		speed = Integer.parseInt(astring[0]);
-            	} catch(Exception e) {
-            		speed = 1;
-            	}
-            	
-	            player.setVelocity(speed, speed, speed); //TODO figure out wtf this means, or if setVelocity is even the correct method.
-	            
-	            cmc.appendText("Binarius hath accepted thy request to set speed to " + speed);
+            	player.setGameType(GameType.ADVENTURE);
+            	cmc.appendText("Gamemode set to adventure.");
             }
             else
             {
-	            player.setVelocity(1, 1, 1); //TODO figure out wtf this means, or if setVelocity is even the correct method.
-	            
-            	cmc.appendText("Speed set to default.");
+            	player.setGameType(GameType.CREATIVE);
+            	cmc.appendText("Gamemode set to creative.");
             }
+            
 	        
             player.addChatMessage(cmc);
         } else { // Oh that silly Console.
-            cmc.appendText("What are you trying to do, overclock the CPU? [Obligatory 'fuck you']");
+            cmc.appendText("You know, if I didn't have to worry about you using stupid commands, these features would be done faster. Fuck you.");
             icommandsender.addChatMessage(cmc);
         }
     }
