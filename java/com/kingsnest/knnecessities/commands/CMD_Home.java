@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.kingsnest.knnecessities.KNNecessities_Main;
 import com.kingsnest.knnecessities.datatypes.Home;
 
 import net.minecraft.client.Minecraft;
@@ -13,13 +14,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 
 public class CMD_Home implements ICommand {
+	private KNNecessities_Main myPlugin = null;
 	private String commandName = "home";
 	private String commandUse = "/home | Will take you to the home you set with /sethome, or spawn if you have none.";
 	
 	
 	private List aliases;
 	
-	public CMD_Home() {
+	public CMD_Home(KNNecessities_Main instance) {
+		this.myPlugin = instance;
 		this.aliases = new ArrayList();
 		aliases.add("home");
 		aliases.add("h");
@@ -69,15 +72,15 @@ public class CMD_Home implements ICommand {
                      player.addChatMessage(cmc);
                      
                      // Set their World
+                     //player.setWorld(p_70029_1_);
                      
                      // Set their Dimension
+                     player.dimension = home.getLocation().getDimension();
                      
                      // Set their Position
-                     
+                     player.setPositionAndRotation(home.getLocation().getX(), home.getLocation().getY(), home.getLocation().getZ(), home.getLocation().getPitch(), home.getLocation().getYaw());
+                     return;
                  }
-
-                 String world = player.worldObj.getWorldInfo().getWorldName();
-                 return;
          }
          else {
                 cmc.appendText("No. Fuck you.");
@@ -106,7 +109,6 @@ public class CMD_Home implements ICommand {
 	
 	private Home checkForHome(UUID playerUUID)
 	{
-		
 		return null;
 	}
 }

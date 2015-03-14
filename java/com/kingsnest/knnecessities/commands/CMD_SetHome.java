@@ -3,6 +3,7 @@ package com.kingsnest.knnecessities.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kingsnest.knnecessities.KNNecessities_Main;
 import com.kingsnest.knnecessities.datatypes.Location;
 
 import net.minecraft.command.ICommand;
@@ -11,13 +12,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 
 public class CMD_SetHome implements ICommand{
-	private String commandName = "home";
-	private String commandUse = "/home | Will take you to the home you set with /sethome, or spawn if you have none.";
+	private KNNecessities_Main myMod = null;
+	private String commandName = "sethome";
+	private String commandUse = "/sethome | Sets the location you will be sent to when using /home.";
 	
 	
 	private List aliases;
 	
-	public CMD_SetHome() {
+	public CMD_SetHome(KNNecessities_Main instance) {
+		this.myMod = instance;
 		this.aliases = new ArrayList();
 		aliases.add("sethome");
 	}

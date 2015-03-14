@@ -1,11 +1,15 @@
 package com.kingsnest.knnecessities;
 
+// Java imports
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kingsnest.knnecessities.commands.CMD_Home;
+// KN imports
 import com.kingsnest.knnecessities.datatypes.Home;
+import com.kingsnest.knnecessities.commands.CMD_Home;
+import com.kingsnest.knnecessities.commands.CMD_SetHome;
 
+// Minecraft / Forge imports
 import net.minecraft.init.Blocks;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -57,7 +61,8 @@ public class KNNecessities_Main {
     @EventHandler
     public void serverLoad(FMLServerStartingEvent event)
     {
-    	event.registerServerCommand(new CMD_Home()); // Add /home handler
+    	event.registerServerCommand(new CMD_Home(this)); // Add /home handler
+    	event.registerServerCommand(new CMD_SetHome(this)); // Add /home handler
     	return;
     }
     

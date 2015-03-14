@@ -1,11 +1,13 @@
 package com.kingsnest.knnecessities.datatypes;
 
+import java.util.UUID;
+
 public class Home{
 	private Location location;
-	private String ownerUUID;
+	private UUID ownerUUID;
 	private String homeName;
 	
-	public Home(Location loc, String ownerUUID)
+	public Home(Location loc, UUID ownerUUID)
 	{
 		setLocation(loc);
 		setOwnerUUID(ownerUUID);
@@ -19,11 +21,11 @@ public class Home{
 		this.location = location;
 	}
 
-	public String getOwnerUUID() {
+	public UUID getOwnerUUID() {
 		return ownerUUID;
 	}
 
-	public void setOwnerUUID(String ownerUUID) {
+	public void setOwnerUUID(UUID ownerUUID) {
 		this.ownerUUID = ownerUUID;
 	}
 }
