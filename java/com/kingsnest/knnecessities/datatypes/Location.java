@@ -17,7 +17,11 @@ public class Location {
 		this.setZ(z);
 	}
 	
-	public String getWorld() {
+	public Location() {
+        // Empty constructor because reasons.
+    }
+
+    public String getWorld() {
 		return world;
 	}
 	

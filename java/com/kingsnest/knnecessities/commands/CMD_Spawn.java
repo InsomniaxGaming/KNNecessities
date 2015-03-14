@@ -53,9 +53,11 @@ public class CMD_Spawn implements ICommand {
         if (icommandsender instanceof EntityPlayer) { // We have a player!
             player = (EntityPlayer) icommandsender;
 
-            myMod.sendPlayerToLocation(player, myMod.getSpawn());
-
-            cmc.appendText("Undead nether squirrels transport you to 'Spawn'.");
+            if (myMod.sendPlayerToLocation(player, myMod.getSpawn())) {
+                cmc.appendText("Undead nether squirrels transport you to 'Spawn'.");
+            } else {
+                cmc.appendText("Some cataclysm in the Nether has prevented the Undead Squirrels from taking you to 'Spawn'");
+            }
             player.addChatMessage(cmc);
         } else { // Oh that silly Console.
             cmc.appendText("Consoles can't spawn. Nice try though. Also the squirrels say, 'Fuck You!'");

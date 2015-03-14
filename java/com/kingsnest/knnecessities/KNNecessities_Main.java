@@ -5,11 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
+
 // KN imports
 import com.kingsnest.knnecessities.datatypes.Home;
 import com.kingsnest.knnecessities.datatypes.Location;
 import com.kingsnest.knnecessities.commands.CMD_Home;
 import com.kingsnest.knnecessities.commands.CMD_SetHome;
+import com.kingsnest.knnecessities.commands.CMD_SetSpawn;
+import com.kingsnest.knnecessities.commands.CMD_Spawn;
+
 
 // Minecraft / Forge imports
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,11 +70,22 @@ public class KNNecessities_Main {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         respawns = new ArrayList<Home>();
-
+        spawn = new Location();
         config = new Configuration(event.getSuggestedConfigurationFile());
 
         // loading the configuration from its file
         config.load();
+        
+        // Load spawn
+        spawn.setWorld(config.get(Configuration.CATEGORY_GENERAL, "Spawn.World", "Some Cool World Name Goes Here").getString()); // If Spawn is the default it generally shouldnt work... :)
+        spawn.setDimension(config.get(Configuration.CATEGORY_GENERAL, "Spawn.Dimension", "-1").getInt());
+        spawn.setX(config.get(Configuration.CATEGORY_GENERAL, "Spawn.X", 0.0).getDouble());
+        spawn.setY(config.get(Configuration.CATEGORY_GENERAL, "Spawn.Y", 0.0).getDouble());
+        spawn.setZ(config.get(Configuration.CATEGORY_GENERAL, "Spawn.Z", 0.0).getDouble());
+        spawn.setPitch((float)config.get(Configuration.CATEGORY_GENERAL, "Spawn.Pitch", 0.0f).getDouble());
+        spawn.setYaw((float)config.get(Configuration.CATEGORY_GENERAL, "Spawn.Yaw", 0.0f).getDouble());
+        
+        config.save();
     }
 
     @EventHandler
@@ -89,19 +105,21 @@ public class KNNecessities_Main {
         event.registerServerCommand(new CMD_Home(this)); // Add /home handler
         event.registerServerCommand(new CMD_SetHome(this)); // Add /sethome
                                                             // handler
+        event.registerServerCommand(new CMD_Spawn(this)); // Add Handler for /spawn
+        event.registerServerCommand(new CMD_SetSpawn(this)); // Add handler for /setspawn
         return;
     }
 
     @EventHandler
     public void serverStopping(FMLServerStoppingEvent event) {
-        // Save the Spawn.
-        config.get(Configuration.CATEGORY_GENERAL, "Spawn.World", getSpawn().getWorld());
-        config.get(Configuration.CATEGORY_GENERAL, "Spawn.Dimension", getSpawn().getDimension());
-        config.get(Configuration.CATEGORY_GENERAL, "Spawn.X", getSpawn().getX());
-        config.get(Configuration.CATEGORY_GENERAL, "Spawn.Y", getSpawn().getY());
-        config.get(Configuration.CATEGORY_GENERAL, "Spawn.Z", getSpawn().getZ());
-        config.get(Configuration.CATEGORY_GENERAL, "Spawn.Pitch", getSpawn().getPitch());
-        config.get(Configuration.CATEGORY_GENERAL, "Spawn.Yaw", getSpawn().getYaw());
+        // Save spawn
+        config.get(Configuration.CATEGORY_GENERAL, "Spawn.World", "Some Cool World Name Goes Here").set(spawn.getWorld()); // If Spawn is the default it generally shouldnt work... :)
+        config.get(Configuration.CATEGORY_GENERAL, "Spawn.Dimension", "-1").set(spawn.getDimension());
+        config.get(Configuration.CATEGORY_GENERAL, "Spawn.X", 0.0).set(spawn.getX());
+        config.get(Configuration.CATEGORY_GENERAL, "Spawn.Y", 0.0).set(spawn.getY());
+        config.get(Configuration.CATEGORY_GENERAL, "Spawn.Z", 0.0).set(spawn.getZ());
+        config.get(Configuration.CATEGORY_GENERAL, "Spawn.Pitch", 0.0).set(spawn.getPitch());
+        config.get(Configuration.CATEGORY_GENERAL, "Spawn.Yaw", 0.0).set(spawn.getYaw());
 
         config.save();
         return;

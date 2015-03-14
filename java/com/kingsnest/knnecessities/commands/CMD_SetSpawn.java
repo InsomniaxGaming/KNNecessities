@@ -59,6 +59,7 @@ public class CMD_SetSpawn implements ICommand {
                     .getWorldName(), player.dimension, player.posX,
                     player.posY, player.posZ, player.cameraPitch,
                     player.cameraYaw));
+            
             cmc.appendText("Undead nether squirrels record the location of /spawn.");
             player.addChatMessage(cmc);
         } else { // Oh that silly Console.
