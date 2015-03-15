@@ -57,21 +57,23 @@ public class CMD_SetSpeed implements ICommand{
 
             if(astring.length > 0)
             {
-            	int speed;
+            	float speed;
             	
             	try {
-            		speed = Integer.parseInt(astring[0]);
+            		speed = Float.parseFloat(astring[0]);
             	} catch(Exception e) {
             		speed = 1;
             	}
-            	
-	            player.setVelocity(speed, speed, speed); //TODO figure out wtf this means, or if setVelocity is even the correct method.
+
+	            player.capabilities.setPlayerWalkSpeed(speed);
+	            player.capabilities.setFlySpeed(speed);
 	            
 	            cmc.appendText("Binarius hath accepted thy request to set speed to " + speed);
             }
             else
             {
-	            player.setVelocity(1, 1, 1); //TODO figure out wtf this means, or if setVelocity is even the correct method.
+	            player.capabilities.setPlayerWalkSpeed(1);
+	            player.capabilities.setFlySpeed(1);
 	            
             	cmc.appendText("Speed set to default.");
             }
