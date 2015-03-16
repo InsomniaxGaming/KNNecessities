@@ -72,8 +72,8 @@ public class CMD_SetSpeed implements ICommand{
             }
             else
             {
-	            player.capabilities.setPlayerWalkSpeed(1);
-	            player.capabilities.setFlySpeed(1);
+	            player.capabilities.setPlayerWalkSpeed(0.1F);
+	            player.capabilities.setFlySpeed(0.1F);
 	            
             	cmc.appendText("Speed set to default.");
             }
